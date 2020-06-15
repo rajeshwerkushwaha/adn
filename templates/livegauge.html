@@ -1,0 +1,370 @@
+<!-- templates/home.html-->
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<style media="screen">
+canvas{
+  height:500px !important;
+}
+.ui.buttons .button{
+  margin: 1px;
+  padding: 10px;
+}
+.pl-10{
+  margin-left: 10px !important;
+}
+.width-100{
+  width: 100%;
+}
+.timespan {
+    font-size: 13px;
+    float: right;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.ui.table td {
+  padding: 5px;
+}
+.footer{
+  height: 100px;
+}
+</style>
+<div class="ui container">
+  <div class="ui grid">
+    <div class="eight wide column">
+      <!-- <h4>Summary for time-period shown in graph</h4> -->
+      <div class="ui selection dropdown width-100">
+        <div class="column">
+          <h4>Summary for time-period shown in graph</h4>
+        </div>
+        <div class="right floated">
+          <span class="timespan">6/7/2020 1:00 pm - 6/8/2020 1:00 pm</span>
+        </div>
+      </div>
+      <table class="ui table">
+        <tbody>
+          <tr>
+            <td>Energy Used</td>
+            <td>581 kWh</td>
+            <td>(approx $75.51 used)</td>
+          </tr>
+          <tr>
+            <td>Energy Generated</td>
+            <td>0.00 Wh</td>
+            <td>(approx $0.00 saved)</td>
+          </tr>
+          <tr>
+            <td>Net</td>
+            <td>581 kWh bought</td>
+            <td>(approx $75.51 spend)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="eight wide column">
+      <div class="ui selection dropdown width-100">
+        <input type="hidden" name="summary-period">
+        <i class="dropdown icon"></i>
+        <div class="default text">Select Summary Time Period</div>
+        <div class="menu">
+          <div class="item" data-value="0">Summary over last 30 days</div>
+          <div class="item" data-value="1">Summary over last 60 days</div>
+          <div class="item" data-value="2">Summary over last 90 days</div>
+        </div>
+      </div>
+      <table class="ui table">
+        <tbody>
+          <tr>
+            <td>Energy Used</td>
+            <td>581 kWh</td>
+            <td>(approx $75.51 used)</td>
+          </tr>
+          <tr>
+            <td>Energy Generated</td>
+            <td>0.00 Wh</td>
+            <td>(approx $0.00 saved)</td>
+          </tr>
+          <tr>
+            <td>Net</td>
+            <td>581 kWh bought</td>
+            <td>(approx $75.51 spend)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="ui grid">
+    <div class="ui buttons">
+      <button class="ui button active">All</button>
+      <button class="ui button">1y</button>
+      <button class="ui button">6M</button>
+      <button class="ui button">3M</button>
+      <button class="ui button">1M</button>
+      <button class="ui button">3W</button>
+      <button class="ui button">1W</button>
+      <button class="ui button">1d</button>
+      <button class="ui button">12h</button>
+      <button class="ui button">6h</button>
+      <button class="ui button">3h</button>
+      <button class="ui button">1h</button>
+      <button class="ui button">10m</button>
+      <button class="ui button pl-10 active">Auto</button>
+      <button class="ui button">500kW</button>
+      <button class="ui button">100kW</button>
+      <button class="ui button">50kW</button>
+      <button class="ui button">10kW</button>
+      <button class="ui button">5kW</button>
+      <button class="ui button">1kW</button>
+      <button class="ui button">500W</button>
+      <button class="ui button">100W</button>
+      <button class="ui button">50W</button>
+    </div>
+  </div>
+  <div class="ui grid">
+    <div class="fourteen wide column">
+      <canvas id="lg-g1"></canvas>
+    </div>
+    <div class="two wide column">
+      <canvas id="lg-g2"></canvas>
+    </div>
+  </div>
+  <div class="ui grid">
+    <table class="ui table">
+      <tbody>
+        <tr>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox" checked="">
+              <label>Power used</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox" checked="">
+              <label>Energy from grid</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checked checkbox">
+              <input type="checkbox" checked="">
+              <label>Power generated</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checked checkbox">
+              <input type="checkbox" checked="">
+              <label>Energy to grid</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>L1 Voltage pos/neg</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>L2 Voltage pos/neg</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>L3 Voltage pos/neg</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>CT1 Amperate pos/neg</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>CT2 Amperate pos/neg</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>CT3 Amperate pos/neg</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checked checkbox">
+              <input type="checkbox" checked="">
+              <label>Power gen/use</label>
+            </div>
+          </td>
+          <td>
+            <div class="ui checkbox">
+              <input type="checkbox">
+              <label>Toggle all/n one</label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ui grid footer">
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+var ctx = document.getElementById('lg-g1').getContext('2d');
+var myChart1 = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 9],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        legend: false,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            },
+            point:{
+                radius: 0
+            }
+        }
+    }
+});
+var ctx = document.getElementById('lg-g2').getContext('2d');
+var myChart2 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Current'],
+        datasets: [{
+            // label: 'Current',
+            data: [22.079],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    max: 50,
+                    stepSize: 10,
+                    position: 'left',
+                    id: 'y-axis-1',
+                    callback: function(label, index, labels) {
+                        switch (label) {
+                            case 0:
+                                return '0 kW';
+                            case 10:
+                                return '10 kW';
+                            case 20:
+                                return '20 kW';
+                            case 30:
+                                return '30 kW';
+                            case 40:
+                                return '40 kW';
+                            case 50:
+                                return '50 kW';
+                        }
+                    }
+                }
+            }]
+        },
+        "hover": {
+          "animationDuration": 0
+        },
+        "animation": {
+          "duration": 1,
+          "onComplete": function() {
+              var chartInstance = this.chart,
+              ctx = chartInstance.ctx;
+
+              ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+
+              this.data.datasets.forEach(function(dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function(bar, index) {
+                  var data = dataset.data[index];
+                  ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                });
+              });
+              }
+        }
+    }
+});
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function updateData() {
+  var current = myChart2.data.datasets[0].data[0];
+  current = 20 +getRandomInt(5);
+  myChart2.data.datasets[0].data[0] = current;
+  myChart2.update();
+
+  var newdata = 20 + getRandomInt(20);
+  myChart1.data.datasets[0].data.shift();
+  myChart1.data.datasets[0].data.push(newdata);
+  myChart1.data.labels.shift();
+  myChart1.data.labels.push('a');
+  myChart1.update();
+}
+// schedule the first invocation:
+var interval = setInterval(updateData, 1000);
+
+
+</script>
+{% endif %}
+{% endblock %}
