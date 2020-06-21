@@ -1,7 +1,7 @@
 <!-- templates/home.html-->
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Live Gauge{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -216,21 +216,61 @@ canvas{
       </tbody>
     </table>
   </div>
-  <div class="ui grid footer">
-
+  <div class="ui grid">
+    <!-- <iframe id="encoder_iframe" src="https://egauge38808.egaug.es/5AD4A/" style="height: 822px; width: 100%;border-width: 0px;">
+    </iframe> -->
   </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
+
+var data = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
+var labels = ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'];
+
+// help for CORS error
+//https://github.com/Rob--W/cors-anywhere/blob/master/demo.html
+
+var cors_api_url = 'https://cors-anywhere.herokuapp.com/';
+
+function doCORSRequest(options, printResult) {
+    var x = new XMLHttpRequest();
+    x.open(options.method, cors_api_url + options.url);
+    x.onload = x.onerror = function() {
+      printResult(
+        // options.method + ' ' + options.url + '\n' +
+        // x.status + ' ' + x.statusText + '\n\n' +
+        (x.responseText || '')
+      );
+    };
+    if (/^POST/i.test(options.method)) {
+      x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+    x.send(options.data);
+}
+
+function getG1Data() {
+    var url = 'https://egauge38808.egaug.es/cgi-bin/egauge-show?e&S&C&s=0&n=600';
+    doCORSRequest({
+      method: this.id === 'post' ? 'POST' : 'GET',
+      url: url
+    }, function printResult(result) {
+      console.log(result);
+    });
+}
+
+var g1_data = getG1Data();
+
+
 var ctx = document.getElementById('lg-g1').getContext('2d');
 var myChart1 = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y'],
+        labels: labels,
         datasets: [{
             label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 9],
+            data: data,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -255,11 +295,31 @@ var myChart1 = new Chart(ctx, {
         legend: false,
         maintainAspectRatio: false,
         scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true,
+                  max: 50,
+                  stepSize: 10,
+                  position: 'left',
+                  id: 'y-axis-1',
+                  callback: function(label, index, labels) {
+                      switch (label) {
+                          case 0:
+                              return '0 kW';
+                          case 10:
+                              return '10 kW';
+                          case 20:
+                              return '20 kW';
+                          case 30:
+                              return '30 kW';
+                          case 40:
+                              return '40 kW';
+                          case 50:
+                              return '50 kW';
+                      }
+                  }
+              }
+          }]
         },
         elements: {
             line: {
@@ -349,16 +409,20 @@ function getRandomInt(max) {
 }
 
 function updateData() {
-  var current = myChart2.data.datasets[0].data[0];
-  current = 20 +getRandomInt(5);
-  myChart2.data.datasets[0].data[0] = current;
-  myChart2.update();
+  // var current = myChart2.data.datasets[0].data[0];
+  // current = 20 +getRandomInt(5);
+  // myChart2.data.datasets[0].data[0] = current;
+  // myChart2.update();
 
   var newdata = 20 + getRandomInt(20);
+  myChart2.data.datasets[0].data[0] = newdata;
+
   myChart1.data.datasets[0].data.shift();
   myChart1.data.datasets[0].data.push(newdata);
   myChart1.data.labels.shift();
   myChart1.data.labels.push('a');
+
+  myChart2.update();
   myChart1.update();
 }
 // schedule the first invocation:
